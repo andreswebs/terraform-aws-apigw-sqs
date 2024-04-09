@@ -1,5 +1,7 @@
 # terraform-aws-apigw-sqs
 
+Create an API Gateway endpoint that publishes to an SQS queue.
+
 [//]: # (BEGIN_TF_DOCS)
 
 

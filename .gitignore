@@ -1,6 +1,8 @@
 .DS_Store
 .envrc
 
+.external_modules/
+
 backend.tf
 terraform.tf
 
