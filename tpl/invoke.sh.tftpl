@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+%{if api_key_enabled~}
+API_KEY=$(
+  aws ssm get-parameter \
+      --name ${api_key_param_name} \
+      --with-decryption \
+      --query 'Parameter.Value' \
+      --output text | tr -d '[:space:]'
+)
+%{endif~}
+INVOKE_URL="${invoke_url}"
+curl \
+    --location \
+    --header 'Content-Type: application/json' \
+    %{~if api_key_enabled~}
+    --header "X-Api-Key: $${API_KEY}" \
+    %{~endif~}
+    --data-raw '{ "TestMessage": "${test_message}" }' \
+    --request POST \
+    "$${INVOKE_URL}${api_path}"
