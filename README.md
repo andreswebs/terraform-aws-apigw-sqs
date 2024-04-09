@@ -11,7 +11,7 @@ Example:
 
 ```hcl
 module "apigw_sqs" {
-  source = "../"
+  source = "github.com/andreswebs/terraform-aws-apigw-sqs"
 }
 ```
 
