@@ -32,8 +32,8 @@ module "apigw_sqs" {
 | <a name="input_lambda_authorizer_openapi_security_scheme"></a> [lambda\_authorizer\_openapi\_security\_scheme](#input\_lambda\_authorizer\_openapi\_security\_scheme) | A partial OpenAPI configuration for the Lambda Authorizer.<br>This must be a valid JSON string representing a valid OpenAPI security scheme object.<br>It will be placed under the `components.securitySchemes.lambda-authorizer`<br>field in the OpenAPI spec.<br>See:<br><https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions-authorizer.html> | `string` | `""` | no |
 | <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | Log retention in days | `number` | `30` | no |
 | <a name="input_queue_name"></a> [queue\_name](#input\_queue\_name) | The queue name | `string` | `"webhook"` | no |
-| <a name="input_ssm_parameter_name_api_key"></a> [ssm\_parameter\_name\_api\_key](#input\_ssm\_parameter\_name\_api\_key) | The name of the SSM parameter to store the API key | `string` | `"/webhook/api-key"` | no |
-| <a name="input_ssm_parameter_name_url"></a> [ssm\_parameter\_name\_url](#input\_ssm\_parameter\_name\_url) | The name of the SSM parameter to store the webhook URL | `string` | `"/webhook/url"` | no |
+| <a name="input_ssm_parameter_name_api_key"></a> [ssm\_parameter\_name\_api\_key](#input\_ssm\_parameter\_name\_api\_key) | The name of the SSM parameter to store the API key | `string` | `null` | no |
+| <a name="input_ssm_parameter_name_url"></a> [ssm\_parameter\_name\_url](#input\_ssm\_parameter\_name\_url) | The name of the SSM parameter to store the webhook URL | `string` | `null` | no |
 
 ## Modules
 

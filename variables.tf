@@ -53,13 +53,13 @@ variable "log_retention_days" {
 variable "ssm_parameter_name_api_key" {
   type        = string
   description = "The name of the SSM parameter to store the API key"
-  default     = "/webhook/api-key"
+  default     = null
 }
 
 variable "ssm_parameter_name_url" {
   type        = string
   description = "The name of the SSM parameter to store the webhook URL"
-  default     = "/webhook/url"
+  default     = null
 }
 
 variable "api_key_enabled" {
