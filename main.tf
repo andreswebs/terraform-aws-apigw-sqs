@@ -46,12 +46,14 @@ resource "aws_iam_role_policy" "apigw_permissions" {
 locals {
   apigw_sqs_integration_uri = "arn:${local.partition}:apigateway:${local.region}:sqs:path/${local.account_id}/${aws_sqs_queue.this.name}"
   openapi_spec = templatefile("${path.module}/tpl/openapi.spec.json.tftpl", {
-    api_title                       = var.api_title
-    base_path                       = "/${var.api_stage_name}"
-    api_path                        = var.api_path
-    apigateway_integration_uri      = local.apigw_sqs_integration_uri
-    apigateway_integration_role_arn = aws_iam_role.apigw_service.arn
-    api_key_enabled                 = var.api_key_enabled
+    api_title                                 = var.api_title
+    base_path                                 = "/${var.api_stage_name}"
+    api_path                                  = var.api_path
+    apigateway_integration_uri                = local.apigw_sqs_integration_uri
+    apigateway_integration_role_arn           = aws_iam_role.apigw_service.arn
+    api_key_enabled                           = var.api_key_enabled
+    lambda_autorizer_enabled                  = var.lambda_authorizer_enabled
+    lambda_authorizer_openapi_security_scheme = var.lambda_authorizer_openapi_security_scheme
   })
 }
 

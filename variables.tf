@@ -64,6 +64,34 @@ variable "ssm_parameter_name_url" {
 
 variable "api_key_enabled" {
   type        = bool
-  description = "Whether to enable API key"
+  description = "Whether to enable API key for API Gateway"
   default     = true
+}
+
+variable "lambda_authorizer_enabled" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+    Whether to enable Lambda Autorizer for API Gateway.
+    If enabled, `lambda_authorizer_openapi_security_scheme` must be set.
+  EOT
+}
+
+variable "lambda_authorizer_openapi_security_scheme" {
+  type        = string
+  description = <<-EOT
+    A partial OpenAPI configuration for the Lambda Authorizer.
+    This must be a valid JSON string representing a valid OpenAPI security scheme object.
+    It will be placed under the `components.securitySchemes.lambda-authorizer`
+    field in the OpenAPI spec.
+    See:
+    <https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions-authorizer.html>
+  EOT
+
+  default = ""
+
+  validation {
+    condition     = var.lambda_authorizer_openapi_security_scheme == "" || (startswith(var.lambda_authorizer_openapi_security_scheme, "{") && endswith(chomp(var.lambda_authorizer_openapi_security_scheme), "}") && can(jsondecode(var.lambda_authorizer_openapi_security_scheme)))
+    error_message = "The input variable `lambda_authorizer_openapi_security_scheme` must be a valid JSON string."
+  }
 }

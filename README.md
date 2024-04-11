@@ -21,13 +21,15 @@ module "apigw_sqs" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_api_key_enabled"></a> [api\_key\_enabled](#input\_api\_key\_enabled) | Whether to enable API key | `bool` | `true` | no |
+| <a name="input_api_key_enabled"></a> [api\_key\_enabled](#input\_api\_key\_enabled) | Whether to enable API key for API Gateway | `bool` | `true` | no |
 | <a name="input_api_key_name"></a> [api\_key\_name](#input\_api\_key\_name) | The name of the API Gateway key | `string` | `"default"` | no |
 | <a name="input_api_name"></a> [api\_name](#input\_api\_name) | The API name in API Gateway | `string` | `"webhook"` | no |
 | <a name="input_api_path"></a> [api\_path](#input\_api\_path) | (optional) The API path | `string` | `"/"` | no |
 | <a name="input_api_stage_name"></a> [api\_stage\_name](#input\_api\_stage\_name) | The name of the API Gateway stage | `string` | `"default"` | no |
 | <a name="input_api_title"></a> [api\_title](#input\_api\_title) | The `info.title` value in the OpenAPI spec | `string` | `"webhook"` | no |
 | <a name="input_api_usage_plan_name"></a> [api\_usage\_plan\_name](#input\_api\_usage\_plan\_name) | The name of the API Gateway usage plan | `string` | `"default"` | no |
+| <a name="input_lambda_authorizer_enabled"></a> [lambda\_authorizer\_enabled](#input\_lambda\_authorizer\_enabled) | Whether to enable Lambda Autorizer for API Gateway.<br>If enabled, `lambda_authorizer_openapi_security_scheme` must be set. | `bool` | `false` | no |
+| <a name="input_lambda_authorizer_openapi_security_scheme"></a> [lambda\_authorizer\_openapi\_security\_scheme](#input\_lambda\_authorizer\_openapi\_security\_scheme) | A partial OpenAPI configuration for the Lambda Authorizer.<br>This must be a valid JSON string representing a valid OpenAPI security scheme object.<br>It will be placed under the `components.securitySchemes.lambda-authorizer`<br>field in the OpenAPI spec.<br>See:<br><https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions-authorizer.html> | `string` | `""` | no |
 | <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | Log retention in days | `number` | `30` | no |
 | <a name="input_queue_name"></a> [queue\_name](#input\_queue\_name) | The queue name | `string` | `"webhook"` | no |
 | <a name="input_ssm_parameter_name_api_key"></a> [ssm\_parameter\_name\_api\_key](#input\_ssm\_parameter\_name\_api\_key) | The name of the SSM parameter to store the API key | `string` | `"/webhook/api-key"` | no |

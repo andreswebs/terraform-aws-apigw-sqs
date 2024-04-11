@@ -22,6 +22,14 @@
             "api-key": []
           }
         ],
+        %{~ else ~}
+        %{~ if lambda_autorizer_enabled ~}
+        "security" : [
+          {
+            "lambda-authorizer" : []
+          }
+        ],
+        %{~ endif ~}
         %{~ endif ~}
         "responses": {
           "200": {
@@ -64,6 +72,10 @@
         "name": "x-api-key",
         "in": "header"
       }
+      %{~ else ~}
+      %{~ if lambda_autorizer_enabled ~}
+      "lambda-authorizer": ${lambda_authorizer_openapi_security_scheme}
+      %{~ endif ~}
       %{~ endif ~}
     },
     "schemas": {
