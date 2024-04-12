@@ -45,29 +45,29 @@ resource "aws_iam_role_policy" "apigw_permissions" {
 }
 
 locals {
-  apigw_sqs_integration_uri = "arn:${local.partition}:apigateway:${local.region}:sqs:path/${local.account_id}/${aws_sqs_queue.this.name}"
+  apigateway_integration_uri_sqs = "arn:${local.partition}:apigateway:${local.region}:sqs:path/${local.account_id}/${aws_sqs_queue.this.name}"
 
-  api_integration_parameters_default = <<-EOT
+  apigateway_integration_request_parameters_default = <<-EOT
     {
       "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'"
     }
   EOT
 
-  api_integration_parameters = jsonencode(merge(
-    jsondecode(local.api_integration_parameters_default),
-    jsondecode(var.api_integration_parameters),
+  apigateway_integration_request_parameters = jsonencode(merge(
+    jsondecode(local.apigateway_integration_request_parameters_default),
+    jsondecode(var.apigateway_integration_request_parameters),
   ))
 
   openapi_spec = templatefile("${path.module}/tpl/openapi.spec.json.tftpl", {
     api_title                                 = var.api_title
     api_path                                  = var.api_path
     api_key_enabled                           = var.api_key_enabled
-    api_method_parameters                     = var.api_method_parameters
-    api_integration_parameters                = local.api_integration_parameters
-    apigateway_integration_uri                = local.apigw_sqs_integration_uri
+    apigateway_method_parameters              = var.apigateway_method_parameters
+    apigateway_integration_request_parameters = local.apigateway_integration_request_parameters
+    apigateway_integration_uri                = local.apigateway_integration_uri_sqs
     apigateway_integration_role_arn           = aws_iam_role.apigw_service.arn
     base_path                                 = "/${var.api_stage_name}"
-    lambda_autorizer_enabled                  = var.lambda_authorizer_enabled
+    lambda_authorizer_enabled                 = var.lambda_authorizer_enabled
     lambda_authorizer_openapi_security_scheme = var.lambda_authorizer_openapi_security_scheme
   })
 }

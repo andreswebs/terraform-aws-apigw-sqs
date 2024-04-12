@@ -12,18 +12,32 @@
       }
     }
   ],
+  %{~ if api_key_enabled ~}
+  %{~ if lambda_authorizer_enabled ~}
+  "x-amazon-apigateway-api-key-source": "AUTHORIZER",
+  %{~ else ~}
   "x-amazon-apigateway-api-key-source": "HEADER",
+  %{~ endif ~}
+  %{~ endif ~}
   "paths": {
     "${api_path}": {
       "post": {
         %{~ if api_key_enabled ~}
+        %{~ if lambda_authorizer_enabled ~}
+        "security" : [
+          {
+            "lambda-authorizer" : []
+          }
+        ],
+        %{~ else ~}
         "security": [
           {
             "api-key": []
           }
         ],
+        %{~ endif ~}
         %{~ else ~}
-        %{~ if lambda_autorizer_enabled ~}
+        %{~ if lambda_authorizer_enabled ~}
         "security" : [
           {
             "lambda-authorizer" : []
@@ -31,8 +45,8 @@
         ],
         %{~ endif ~}
         %{~ endif ~}
-        %{~ if api_method_parameters != "" ~}
-        "parameters": ${api_method_parameters},
+        %{~ if apigateway_method_parameters != "" ~}
+        "parameters": ${apigateway_method_parameters},
         %{~ endif ~}
         "responses": {
           "200": {
@@ -56,7 +70,7 @@
               "statusCode": "200"
             }
           },
-          "requestParameters": ${api_integration_parameters},
+          "requestParameters": ${apigateway_integration_request_parameters},
           "requestTemplates": {
             "application/json": "Action=SendMessage&MessageBody=$input.body"
           },
@@ -68,13 +82,17 @@
   "components": {
     "securitySchemes": {
       %{~ if api_key_enabled ~}
+      %{~ if lambda_authorizer_enabled ~}
+      "lambda-authorizer": ${lambda_authorizer_openapi_security_scheme}
+      %{~ else ~}
       "api-key": {
         "type": "apiKey",
         "name": "x-api-key",
         "in": "header"
       }
+      %{~ endif ~}
       %{~ else ~}
-      %{~ if lambda_autorizer_enabled ~}
+      %{~ if lambda_authorizer_enabled ~}
       "lambda-authorizer": ${lambda_authorizer_openapi_security_scheme}
       %{~ endif ~}
       %{~ endif ~}
