@@ -4,6 +4,12 @@ variable "api_name" {
   default     = "webhook"
 }
 
+variable "iam_role_name" {
+  type        = string
+  description = "The name of the IAM role for API Gateway"
+  default     = "apigateway-webhook"
+}
+
 variable "api_title" {
   type        = string
   description = "The `info.title` value in the OpenAPI spec"

@@ -23,6 +23,11 @@ output "api_key" {
   value       = aws_api_gateway_api_key.this
 }
 
+output "iam_role" {
+  description = "API Gateway integration IAM role"
+  value       = aws_iam_role.apigw_service
+}
+
 output "openapi_spec" {
   description = "The OpenAPI spec"
   value       = local.openapi_spec
