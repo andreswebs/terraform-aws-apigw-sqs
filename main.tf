@@ -23,6 +23,7 @@ data "aws_iam_policy_document" "apigw_service_trust" {
 }
 
 resource "aws_iam_role" "apigw_service" {
+  name               = var.iam_role_name
   assume_role_policy = data.aws_iam_policy_document.apigw_service_trust.json
 }
 
