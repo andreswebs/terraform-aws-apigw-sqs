@@ -21,10 +21,11 @@ module "apigw_sqs" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_api_integration_parameters"></a> [api\_integration\_parameters](#input\_api\_integration\_parameters) | A JSON object of API Gateway Integration request parameter mappings.<br>These will be placed under the `x-amazon-apigateway-integration.requestParameters`<br>field in the OpenAPI spec.<br>See:<br><https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions-integration-requestParameters.html> | `string` | `"{}"` | no |
 | <a name="input_api_key_enabled"></a> [api\_key\_enabled](#input\_api\_key\_enabled) | Whether to enable API key for API Gateway | `bool` | `true` | no |
 | <a name="input_api_key_name"></a> [api\_key\_name](#input\_api\_key\_name) | The name of the API Gateway key | `string` | `"default"` | no |
+| <a name="input_api_method_parameters"></a> [api\_method\_parameters](#input\_api\_method\_parameters) | A JSON array of API Gateway Method request parameters.<br>Each element in the array must be a valid OpenAPI parameter object.<br>See:<br><https://swagger.io/docs/specification/describing-parameters/> | `string` | `""` | no |
 | <a name="input_api_name"></a> [api\_name](#input\_api\_name) | The API name in API Gateway | `string` | `"webhook"` | no |
-| <a name="input_api_parameters"></a> [api\_parameters](#input\_api\_parameters) | A JSON array of request parameters.<br>Each element in the array must be a valid OpenAPI parameter object.<br>See:<br><https://swagger.io/docs/specification/describing-parameters/> | `string` | `""` | no |
 | <a name="input_api_path"></a> [api\_path](#input\_api\_path) | (optional) The API path | `string` | `"/"` | no |
 | <a name="input_api_stage_name"></a> [api\_stage\_name](#input\_api\_stage\_name) | The name of the API Gateway stage | `string` | `"default"` | no |
 | <a name="input_api_title"></a> [api\_title](#input\_api\_title) | The `info.title` value in the OpenAPI spec | `string` | `"webhook"` | no |

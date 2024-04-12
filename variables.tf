@@ -102,10 +102,10 @@ variable "lambda_authorizer_openapi_security_scheme" {
   }
 }
 
-variable "api_parameters" {
+variable "api_method_parameters" {
   type        = string
   description = <<-EOT
-    A JSON array of request parameters.
+    A JSON array of API Gateway Method request parameters.
     Each element in the array must be a valid OpenAPI parameter object.
     See:
     <https://swagger.io/docs/specification/describing-parameters/>
@@ -113,8 +113,26 @@ variable "api_parameters" {
   default     = ""
 
   validation {
-    condition     = var.api_parameters == "" || (startswith(var.api_parameters, "[") && endswith(chomp(var.api_parameters), "]") && can(jsondecode(var.api_parameters)))
-    error_message = "The input variable `api_parameters` must be a valid JSON array."
+    condition     = var.api_method_parameters == "" || (startswith(var.api_method_parameters, "[") && endswith(chomp(var.api_method_parameters), "]") && can(jsondecode(var.api_method_parameters)))
+    error_message = "The input variable `api_method_parameters` must be a valid JSON array."
+  }
+
+}
+
+variable "api_integration_parameters" {
+  type        = string
+  description = <<-EOT
+    A JSON object of API Gateway Integration request parameter mappings.
+    These will be placed under the `x-amazon-apigateway-integration.requestParameters`
+    field in the OpenAPI spec.
+    See:
+    <https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions-integration-requestParameters.html>
+  EOT
+  default     = "{}"
+
+  validation {
+    condition     = var.api_integration_parameters == "" || (startswith(var.api_integration_parameters, "{") && endswith(chomp(var.api_integration_parameters), "}") && can(jsondecode(var.api_integration_parameters)))
+    error_message = "The input variable `api_integration_parameters` must be a valid JSON object."
   }
 
 }
