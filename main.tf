@@ -58,7 +58,7 @@ locals {
     jsondecode(var.apigateway_integration_request_parameters),
   ))
 
-  openapi_spec = templatefile("${path.module}/tpl/openapi.spec.json.tftpl", {
+  openapi_spec = jsonencode(jsondecode(templatefile("${path.module}/tpl/openapi.spec.json.tftpl", {
     api_title                                 = var.api_title
     api_path                                  = var.api_path
     api_key_enabled                           = var.api_key_enabled
@@ -69,7 +69,7 @@ locals {
     base_path                                 = "/${var.api_stage_name}"
     lambda_authorizer_enabled                 = var.lambda_authorizer_enabled
     lambda_authorizer_openapi_security_scheme = var.lambda_authorizer_openapi_security_scheme
-  })
+  })))
 }
 
 resource "aws_api_gateway_rest_api" "this" {
