@@ -98,6 +98,17 @@ variable "lambda_authorizer_openapi_security_scheme" {
 
   validation {
     condition     = var.lambda_authorizer_openapi_security_scheme == "" || (startswith(var.lambda_authorizer_openapi_security_scheme, "{") && endswith(chomp(var.lambda_authorizer_openapi_security_scheme), "}") && can(jsondecode(var.lambda_authorizer_openapi_security_scheme)))
-    error_message = "The input variable `lambda_authorizer_openapi_security_scheme` must be a valid JSON string."
+    error_message = "The input variable `lambda_authorizer_openapi_security_scheme` must be a valid JSON object."
   }
+}
+
+variable "api_parameters" {
+  type    = string
+  default = ""
+
+  validation {
+    condition     = var.api_parameters == "" || (startswith(var.api_parameters, "[") && endswith(chomp(var.api_parameters), "]") && can(jsondecode(var.api_parameters)))
+    error_message = "The input variable `api_parameters` must be a valid JSON array."
+  }
+
 }
