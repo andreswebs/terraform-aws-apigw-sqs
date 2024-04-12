@@ -103,8 +103,14 @@ variable "lambda_authorizer_openapi_security_scheme" {
 }
 
 variable "api_parameters" {
-  type    = string
-  default = ""
+  type        = string
+  description = <<-EOT
+    A JSON array of request parameters.
+    Each element in the array must be a valid OpenAPI parameter object.
+    See:
+    <https://swagger.io/docs/specification/describing-parameters/>
+  EOT
+  default     = ""
 
   validation {
     condition     = var.api_parameters == "" || (startswith(var.api_parameters, "[") && endswith(chomp(var.api_parameters), "]") && can(jsondecode(var.api_parameters)))

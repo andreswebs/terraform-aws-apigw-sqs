@@ -24,7 +24,7 @@ module "apigw_sqs" {
 | <a name="input_api_key_enabled"></a> [api\_key\_enabled](#input\_api\_key\_enabled) | Whether to enable API key for API Gateway | `bool` | `true` | no |
 | <a name="input_api_key_name"></a> [api\_key\_name](#input\_api\_key\_name) | The name of the API Gateway key | `string` | `"default"` | no |
 | <a name="input_api_name"></a> [api\_name](#input\_api\_name) | The API name in API Gateway | `string` | `"webhook"` | no |
-| <a name="input_api_parameters"></a> [api\_parameters](#input\_api\_parameters) | n/a | `string` | `""` | no |
+| <a name="input_api_parameters"></a> [api\_parameters](#input\_api\_parameters) | A JSON array of request parameters.<br>Each element in the array must be a valid OpenAPI parameter object.<br>See:<br><https://swagger.io/docs/specification/describing-parameters/> | `string` | `""` | no |
 | <a name="input_api_path"></a> [api\_path](#input\_api\_path) | (optional) The API path | `string` | `"/"` | no |
 | <a name="input_api_stage_name"></a> [api\_stage\_name](#input\_api\_stage\_name) | The name of the API Gateway stage | `string` | `"default"` | no |
 | <a name="input_api_title"></a> [api\_title](#input\_api\_title) | The `info.title` value in the OpenAPI spec | `string` | `"webhook"` | no |
