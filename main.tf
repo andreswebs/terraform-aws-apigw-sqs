@@ -149,8 +149,9 @@ resource "aws_api_gateway_method_settings" "this" {
   method_path = "*/*"
 
   settings {
-    metrics_enabled = true
-    logging_level   = "INFO"
+    logging_level      = "INFO"
+    metrics_enabled    = true
+    data_trace_enabled = true
   }
 }
 
