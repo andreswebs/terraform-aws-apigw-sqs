@@ -188,7 +188,7 @@ resource "aws_ssm_parameter" "api_key" {
 }
 
 locals {
-  api_url = "${aws_api_gateway_stage.this.invoke_url}${var.api_path}"
+  api_url = replace("${aws_api_gateway_stage.this.invoke_url}${var.api_path}", "/\\/$/", "")
 }
 
 resource "aws_ssm_parameter" "api_url" {
