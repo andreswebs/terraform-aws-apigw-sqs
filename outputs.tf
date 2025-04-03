@@ -39,8 +39,8 @@ output "test_cmd" {
 
     invoke = templatefile("${path.module}/tpl/invoke.sh.tftpl", {
       api_key_enabled    = var.api_key_enabled
-      api_key_param_name = var.api_key_enabled ? aws_ssm_parameter.api_key[0].name : null
-      api_path           = var.api_path
+      api_key_param_name = try(aws_ssm_parameter.api_key[0].name, null)
+      api_url_param_name = aws_ssm_parameter.api_url.name
       invoke_url         = aws_api_gateway_stage.this.invoke_url
       test_message       = "Hello from ApiGateway!"
     })

@@ -6,6 +6,7 @@ locals {
   partition  = data.aws_partition.current.partition
   region     = data.aws_region.current.name
   account_id = data.aws_caller_identity.current.account_id
+  dns_suffix = data.aws_partition.current.dns_suffix
 }
 
 resource "aws_sqs_queue" "this" {
@@ -17,7 +18,7 @@ data "aws_iam_policy_document" "apigw_service_trust" {
     actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"
-      identifiers = ["apigateway.amazonaws.com"]
+      identifiers = ["apigateway.${local.dns_suffix}"]
     }
   }
 }
@@ -90,7 +91,7 @@ resource "aws_api_gateway_deployment" "this" {
 }
 
 resource "aws_cloudwatch_log_group" "this" {
-  name              = "/aws/apigateway/${var.api_name}"
+  name              = "${var.log_group_name_prefix}${var.api_name}"
   retention_in_days = var.log_retention_days
 }
 
@@ -107,8 +108,8 @@ data "aws_iam_policy_document" "apigw_access_logs" {
     principals {
       type = "Service"
       identifiers = [
-        "apigateway.amazonaws.com",
-        "delivery.logs.amazonaws.com",
+        "apigateway.${local.dns_suffix}",
+        "delivery.logs.${local.dns_suffix}",
       ]
     }
 
@@ -186,8 +187,8 @@ resource "aws_ssm_parameter" "api_key" {
   value = aws_api_gateway_api_key.this[0].value
 }
 
-resource "aws_ssm_parameter" "url" {
-  name  = var.ssm_parameter_name_url
+resource "aws_ssm_parameter" "api_url" {
+  name  = var.ssm_parameter_name_api_url
   type  = "String"
   value = "${aws_api_gateway_stage.this.invoke_url}${var.api_path}"
 }

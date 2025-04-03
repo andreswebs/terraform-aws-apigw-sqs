@@ -1,30 +1,29 @@
 formatter: markdown
 
 content: |-
-    {{ .Header }}
+  {{ .Header }}
 
-    ## Usage
+  ## Usage
 
-    Example:
-    
-    ```hcl
-    {{ include "examples/main.tf" }}
-    ```
+  Example:
 
-    {{ .Footer }}
+  ```hcl
+  {{ include "examples/main.tf" }}
+  ```
 
-    {{ .Inputs }}
+  {{ .Footer }}
 
-    {{ .Modules }}
+  {{ .Inputs }}
 
-    {{ .Outputs }}
+  {{ .Modules }}
 
-    {{ .Providers }}
+  {{ .Outputs }}
 
-    {{ .Requirements }}
+  {{ .Providers }}
 
-    {{ .Resources }}
+  {{ .Requirements }}
 
+  {{ .Resources }}
 
 output:
   file: README.md
@@ -34,4 +33,3 @@ output:
     {{ .Content }}
 
     [//]: # (END_TF_DOCS)
-

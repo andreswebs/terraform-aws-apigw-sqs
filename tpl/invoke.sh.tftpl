@@ -8,13 +8,20 @@ API_KEY=$(
       --output text | tr -d '[:space:]'
 )
 %{endif~}
-INVOKE_URL="${invoke_url}"
+API_URL=$(
+  aws ssm get-parameter \
+      --name ${api_url_param_name} \
+      --with-decryption \
+      --query 'Parameter.Value' \
+      --output text | tr -d '[:space:]'
+)
+DATA='{ "TestMessage": "${test_message}" }'
 curl \
     --location \
     --header 'Content-Type: application/json' \
     %{~if api_key_enabled~}
     --header "X-Api-Key: $${API_KEY}" \
     %{~endif~}
-    --data-raw '{ "TestMessage": "${test_message}" }' \
+    --data-raw $${DATA} \
     --request POST \
-    "$${INVOKE_URL}${api_path}"
+    "$${API_URL}"

@@ -53,7 +53,18 @@ variable "queue_name" {
 variable "log_retention_days" {
   type        = number
   description = "Log retention in days"
-  default     = 30
+  default     = 90
+}
+
+variable "log_group_name_prefix" {
+  type        = string
+  description = "Name prefix for the created log group"
+  default     = "/aws/apigateway/"
+
+  validation {
+    condition     = var.log_group_name_prefix == "" || (startswith(var.log_group_name_prefix, "/") && endswith(var.log_group_name_prefix, "/"))
+    error_message = "The input variable `log_group_name_prefix` must start and end with a forward slash (`/`)."
+  }
 }
 
 variable "ssm_parameter_name_api_key" {
@@ -62,9 +73,9 @@ variable "ssm_parameter_name_api_key" {
   default     = null
 }
 
-variable "ssm_parameter_name_url" {
+variable "ssm_parameter_name_api_url" {
   type        = string
-  description = "The name of the SSM parameter to store the webhook URL"
+  description = "The name of the SSM parameter to store the API URL"
   default     = null
 }
 
@@ -133,5 +144,4 @@ variable "apigateway_integration_request_parameters" {
     condition     = var.apigateway_integration_request_parameters == "" || (startswith(var.apigateway_integration_request_parameters, "{") && endswith(chomp(var.apigateway_integration_request_parameters), "}") && can(jsondecode(var.apigateway_integration_request_parameters)))
     error_message = "The input variable `apigateway_integration_request_parameters` must be a valid JSON object."
   }
-
 }
