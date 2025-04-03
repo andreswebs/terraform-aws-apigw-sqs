@@ -13,9 +13,9 @@ output "api_stage" {
   value       = aws_api_gateway_stage.this
 }
 
-output "invoke_url" {
-  value       = aws_api_gateway_stage.this.invoke_url
-  description = "The API Gateway invocation URL"
+output "api_url" {
+  description = "The configured API URL"
+  value       = local.api_url
 }
 
 output "api_key" {

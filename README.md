@@ -50,8 +50,8 @@ No modules.
 | <a name="output_api"></a> [api](#output\_api) | The `aws_api_gateway_rest_api` resource |
 | <a name="output_api_key"></a> [api\_key](#output\_api\_key) | The `aws_api_gateway_api_key` resource |
 | <a name="output_api_stage"></a> [api\_stage](#output\_api\_stage) | The `aws_api_gateway_stage` resource |
+| <a name="output_api_url"></a> [api\_url](#output\_api\_url) | The configured API URL |
 | <a name="output_iam_role"></a> [iam\_role](#output\_iam\_role) | API Gateway integration IAM role |
-| <a name="output_invoke_url"></a> [invoke\_url](#output\_invoke\_url) | The API Gateway invocation URL |
 | <a name="output_openapi_spec"></a> [openapi\_spec](#output\_openapi\_spec) | The OpenAPI spec |
 | <a name="output_queue"></a> [queue](#output\_queue) | The `aws_sqs_queue` resource |
 | <a name="output_test_cmd"></a> [test\_cmd](#output\_test\_cmd) | Commands to test the integration |
