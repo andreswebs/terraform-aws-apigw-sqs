@@ -50,6 +50,12 @@ variable "queue_name" {
   default     = "webhook"
 }
 
+variable "queue_visibility_timeout_seconds" {
+  type        = number
+  description = "(Optional) Visibility timeout for the queue (default: 30)"
+  default     = null
+}
+
 variable "log_retention_days" {
   type        = number
   description = "Log retention in days"

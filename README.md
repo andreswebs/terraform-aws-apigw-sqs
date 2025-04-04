@@ -36,6 +36,7 @@ module "apigw_sqs" {
 | <a name="input_log_group_name_prefix"></a> [log\_group\_name\_prefix](#input\_log\_group\_name\_prefix) | Name prefix for the created log group | `string` | `"/aws/apigateway/"` | no |
 | <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | Log retention in days | `number` | `90` | no |
 | <a name="input_queue_name"></a> [queue\_name](#input\_queue\_name) | The queue name | `string` | `"webhook"` | no |
+| <a name="input_queue_visibility_timeout_seconds"></a> [queue\_visibility\_timeout\_seconds](#input\_queue\_visibility\_timeout\_seconds) | (Optional) Visibility timeout for the queue (default: 30) | `number` | `null` | no |
 | <a name="input_ssm_parameter_name_api_key"></a> [ssm\_parameter\_name\_api\_key](#input\_ssm\_parameter\_name\_api\_key) | The name of the SSM parameter to store the API key | `string` | `null` | no |
 | <a name="input_ssm_parameter_name_api_url"></a> [ssm\_parameter\_name\_api\_url](#input\_ssm\_parameter\_name\_api\_url) | The name of the SSM parameter to store the API URL | `string` | `null` | no |
 

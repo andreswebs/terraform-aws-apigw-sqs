@@ -11,6 +11,8 @@ locals {
 
 resource "aws_sqs_queue" "this" {
   name = var.queue_name
+
+  visibility_timeout_seconds = var.queue_visibility_timeout_seconds
 }
 
 data "aws_iam_policy_document" "apigw_service_trust" {
@@ -27,7 +29,6 @@ resource "aws_iam_role" "apigw_service" {
   name               = var.iam_role_name
   assume_role_policy = data.aws_iam_policy_document.apigw_service_trust.json
 }
-
 
 data "aws_iam_policy_document" "apigw_permissions" {
   statement {
