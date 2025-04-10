@@ -9,10 +9,42 @@ locals {
   dns_suffix = data.aws_partition.current.dns_suffix
 }
 
+locals {
+  queue_name_norm = try(replace(var.queue_name, ".fifo", ""), var.queue_name)
+  queue_name      = var.queue_name != null && var.queue_name != "" ? (var.fifo_queue ? "${local.queue_name_norm}.fifo" : local.queue_name_norm) : null
+}
+
 resource "aws_sqs_queue" "this" {
-  name = var.queue_name
+  name = local.queue_name
+
+  fifo_queue = var.fifo_queue
 
   visibility_timeout_seconds = var.queue_visibility_timeout_seconds
+}
+
+locals {
+  ddl_queue_name_norm = var.ddl_queue_name != null && var.ddl_queue_name != "" ? try(replace(var.ddl_queue_name, ".fifo", ""), var.ddl_queue_name) : (local.queue_name_norm != null && local.queue_name_norm != "" ? "${local.queue_name_norm}-ddl" : null)
+  ddl_queue_name      = var.fifo_queue ? "${local.ddl_queue_name_norm}.fifo" : local.ddl_queue_name_norm
+}
+
+resource "aws_sqs_queue" "ddl" {
+  name = local.ddl_queue_name
+
+  fifo_queue = var.fifo_queue
+
+  redrive_allow_policy = jsonencode({
+    redrivePermission = "byQueue",
+    sourceQueueArns   = [aws_sqs_queue.this.arn]
+  })
+}
+
+resource "aws_sqs_queue_redrive_policy" "this" {
+  queue_url = aws_sqs_queue.this.id
+
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.ddl.arn
+    maxReceiveCount     = var.ddl_max_receive_count
+  })
 }
 
 data "aws_iam_policy_document" "apigw_service_trust" {
@@ -68,6 +100,7 @@ locals {
     apigateway_integration_request_parameters = local.apigateway_integration_request_parameters
     apigateway_integration_uri                = local.apigateway_integration_uri_sqs
     apigateway_integration_role_arn           = aws_iam_role.apigw_service.arn
+    apigateway_request_templates              = var.apigateway_request_templates
     base_path                                 = "/${var.api_stage_name}"
     lambda_authorizer_enabled                 = var.lambda_authorizer_enabled
     lambda_authorizer_openapi_security_scheme = var.lambda_authorizer_openapi_security_scheme

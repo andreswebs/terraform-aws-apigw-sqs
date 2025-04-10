@@ -151,3 +151,31 @@ variable "apigateway_integration_request_parameters" {
     error_message = "The input variable `apigateway_integration_request_parameters` must be a valid JSON object."
   }
 }
+
+variable "apigateway_request_templates" {
+  type        = string
+  default     = ""
+  description = <<-EOT
+    String to append to the API Gateway integration request templates value.
+    If using a FIFO queue, this variable must contain a value similar to the following:
+    `&MessageDeduplicationId=$context.requestId&MessageGroupId=$input.json('$.Example'))`
+  EOT
+}
+
+variable "fifo_queue" {
+  type        = bool
+  description = "Whether to use a FIFO queue"
+  default     = false
+}
+
+variable "ddl_queue_name" {
+  type        = string
+  description = "Name for the dead-letter queue"
+  default     = null
+}
+
+variable "ddl_max_receive_count" {
+  type        = number
+  description = "Number of times a consumer can receive a message from the main queue before it is moved to the dead-letter queue"
+  default     = 1
+}

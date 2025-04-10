@@ -72,7 +72,7 @@
           },
           "requestParameters": ${apigateway_integration_request_parameters},
           "requestTemplates": {
-            "application/json": "Action=SendMessage&MessageBody=$input.body"
+            "application/json": "Action=SendMessage&MessageBody=$input.body${apigateway_request_templates}"
           },
           "passthroughBehavior": "never"
         }
