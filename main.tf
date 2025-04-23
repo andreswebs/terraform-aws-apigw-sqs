@@ -127,6 +127,7 @@ resource "aws_api_gateway_deployment" "this" {
 resource "aws_cloudwatch_log_group" "this" {
   name              = "${var.log_group_name_prefix}${var.api_name}"
   retention_in_days = var.log_retention_days
+  kms_key_id        = var.log_group_kms_key_id
 }
 
 data "aws_iam_policy_document" "apigw_access_logs" {
@@ -186,9 +187,9 @@ resource "aws_api_gateway_method_settings" "this" {
   method_path = "*/*"
 
   settings {
-    logging_level      = "INFO"
-    metrics_enabled    = true
-    data_trace_enabled = true
+    logging_level      = var.apigateway_logging_level
+    metrics_enabled    = var.apigateway_metrics_enabled
+    data_trace_enabled = var.apigateway_data_trace_enabled
   }
 }
 
@@ -215,10 +216,11 @@ resource "aws_api_gateway_usage_plan_key" "this" {
 }
 
 resource "aws_ssm_parameter" "api_key" {
-  count = var.api_key_enabled ? 1 : 0
-  name  = var.ssm_parameter_name_api_key
-  type  = "SecureString"
-  value = aws_api_gateway_api_key.this[0].value
+  count  = var.api_key_enabled ? 1 : 0
+  name   = var.ssm_parameter_name_api_key
+  key_id = var.ssm_parameter_kms_key_id
+  type   = "SecureString"
+  value  = aws_api_gateway_api_key.this[0].value
 }
 
 locals {

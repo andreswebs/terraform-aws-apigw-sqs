@@ -73,6 +73,18 @@ variable "log_group_name_prefix" {
   }
 }
 
+variable "log_group_kms_key_id" {
+  type        = string
+  description = "KMS key ID to use for log group encryption"
+  default     = null
+}
+
+variable "ssm_parameter_kms_key_id" {
+  type        = string
+  description = "KMS key ID to use for SSM parameter encryption"
+  default     = null
+}
+
 variable "ssm_parameter_name_api_key" {
   type        = string
   description = "The name of the SSM parameter to store the API key"
@@ -160,6 +172,35 @@ variable "apigateway_request_templates" {
     If using a FIFO queue, this variable must contain a value similar to the following:
     `&MessageDeduplicationId=$context.requestId&MessageGroupId=$input.json('$.Example'))`
   EOT
+}
+
+variable "apigateway_logging_level" {
+  type        = string
+  description = "API Gateway method settings - logging_level"
+  default     = "INFO"
+
+  validation {
+    condition     = contains(["OFF", "ERROR", "INFO"], var.apigateway_logging_level)
+    error_message = "The logging level must be one of the following: OFF, ERROR, or INFO."
+  }
+}
+
+variable "apigateway_metrics_enabled" {
+  type        = bool
+  description = "API Gateway method settings - metrics_enabled"
+  default     = true
+}
+
+variable "apigateway_data_trace_enabled" {
+  type        = bool
+  description = "API Gateway method settings - data_trace_enabled"
+  default     = false
+}
+
+variable "apigateway_caching_enabled" {
+  type        = bool
+  description = "API Gateway method settings - caching_enabled"
+  default     = false
 }
 
 variable "fifo_queue" {
