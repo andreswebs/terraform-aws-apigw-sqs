@@ -20,6 +20,7 @@ resource "aws_sqs_queue" "this" {
   fifo_queue = var.fifo_queue
 
   visibility_timeout_seconds = var.queue_visibility_timeout_seconds
+  message_retention_seconds  = var.queue_message_retention_seconds
 
   sqs_managed_sse_enabled = var.sqs_managed_sse_enabled
 
@@ -27,6 +28,14 @@ resource "aws_sqs_queue" "this" {
 }
 
 locals {
+  ## Inherited rather than defaulted separately, so raising the queue's
+  ## retention cannot silently leave the dead-letter queue expiring first.
+  dlq_message_retention_seconds = (
+    var.dlq_message_retention_seconds != null
+    ? var.dlq_message_retention_seconds
+    : var.queue_message_retention_seconds
+  )
+
   dlq_queue_name_given = var.dlq_queue_name != null && var.dlq_queue_name != ""
 
   dlq_queue_name_norm = (
@@ -46,6 +55,8 @@ resource "aws_sqs_queue" "dlq" {
   name = local.dlq_queue_name
 
   fifo_queue = var.fifo_queue
+
+  message_retention_seconds = local.dlq_message_retention_seconds
 
   sqs_managed_sse_enabled = var.sqs_managed_sse_enabled
 

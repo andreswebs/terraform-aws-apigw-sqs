@@ -186,6 +186,7 @@ output "dlq_name" {
 | <a name="input_apigateway_metrics_enabled"></a> [apigateway\_metrics\_enabled](#input\_apigateway\_metrics\_enabled) | API Gateway method settings - metrics\_enabled | `bool` | `true` | no |
 | <a name="input_apigateway_request_templates"></a> [apigateway\_request\_templates](#input\_apigateway\_request\_templates) | String appended to the API Gateway integration request template, after the<br/>URL-encoded message body. Use it to add further form parameters.<br/>If using a FIFO queue, this variable must contain a value similar to the following:<br/>`&MessageDeduplicationId=$context.requestId&MessageGroupId=$input.json('$.Example')`<br/><br/>Note that the message body itself is URL-encoded by the module and must not<br/>be added here. | `string` | `""` | no |
 | <a name="input_dlq_max_receive_count"></a> [dlq\_max\_receive\_count](#input\_dlq\_max\_receive\_count) | Number of times a consumer can receive a message from the main queue before it is moved to the dead-letter queue | `number` | `1` | no |
+| <a name="input_dlq_message_retention_seconds"></a> [dlq\_message\_retention\_seconds](#input\_dlq\_message\_retention\_seconds) | (Optional) How long the dead-letter queue keeps a message, in seconds.<br/>Defaults to `queue_message_retention_seconds`: a dead-letter queue that<br/>expires sooner than the queue feeding it destroys the evidence it exists to<br/>preserve. | `number` | `null` | no |
 | <a name="input_dlq_queue_name"></a> [dlq\_queue\_name](#input\_dlq\_queue\_name) | Name for the dead-letter queue. Defaults to `<queue_name>-dlq`. | `string` | `null` | no |
 | <a name="input_fifo_queue"></a> [fifo\_queue](#input\_fifo\_queue) | Whether to use a FIFO queue | `bool` | `false` | no |
 | <a name="input_iam_role_name"></a> [iam\_role\_name](#input\_iam\_role\_name) | The name of the IAM role for API Gateway | `string` | `"apigateway-webhook"` | no |
@@ -194,6 +195,7 @@ output "dlq_name" {
 | <a name="input_log_group_kms_key_id"></a> [log\_group\_kms\_key\_id](#input\_log\_group\_kms\_key\_id) | KMS key ID to use for log group encryption | `string` | `null` | no |
 | <a name="input_log_group_name_prefix"></a> [log\_group\_name\_prefix](#input\_log\_group\_name\_prefix) | Name prefix for the created log group | `string` | `"/aws/apigateway/"` | no |
 | <a name="input_log_retention_days"></a> [log\_retention\_days](#input\_log\_retention\_days) | Log retention in days | `number` | `90` | no |
+| <a name="input_queue_message_retention_seconds"></a> [queue\_message\_retention\_seconds](#input\_queue\_message\_retention\_seconds) | (Optional) How long the queue keeps a message, in seconds, from 60 to<br/>1209600 (14 days).<br/>When null the AWS default of 4 days applies, which is shorter than a buffer<br/>fronting an unreliable consumer usually wants. | `number` | `null` | no |
 | <a name="input_queue_name"></a> [queue\_name](#input\_queue\_name) | The queue name | `string` | `"webhook"` | no |
 | <a name="input_queue_visibility_timeout_seconds"></a> [queue\_visibility\_timeout\_seconds](#input\_queue\_visibility\_timeout\_seconds) | (Optional) Visibility timeout for the queue (default: 30) | `number` | `null` | no |
 | <a name="input_sqs_managed_sse_enabled"></a> [sqs\_managed\_sse\_enabled](#input\_sqs\_managed\_sse\_enabled) | Whether to enable SQS-managed server-side encryption on both queues.<br/>Enabled by default: the module is a webhook sink, so the queue contents are<br/>whatever a third party posted. | `bool` | `true` | no |
@@ -228,7 +230,7 @@ No modules.
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 6.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.64.0 |
 
 ## Requirements
 
