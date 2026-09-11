@@ -87,13 +87,21 @@ variable "ssm_parameter_kms_key_id" {
 
 variable "ssm_parameter_name_api_key" {
   type        = string
-  description = "The name of the SSM parameter to store the API key"
+  description = <<-EOT
+    The name of the SSM parameter to store the API key.
+    Only used when `api_key_enabled` is true. When null or empty, the
+    parameter is not created.
+  EOT
   default     = null
 }
 
 variable "ssm_parameter_name_api_url" {
   type        = string
-  description = "The name of the SSM parameter to store the API URL"
+  description = <<-EOT
+    The name of the SSM parameter to store the API URL.
+    When null or empty, the parameter is not created and the `api_url` output
+    remains the only way to read the URL.
+  EOT
   default     = null
 }
 
@@ -128,6 +136,11 @@ variable "lambda_authorizer_openapi_security_scheme" {
   validation {
     condition     = var.lambda_authorizer_openapi_security_scheme == "" || (startswith(var.lambda_authorizer_openapi_security_scheme, "{") && endswith(chomp(var.lambda_authorizer_openapi_security_scheme), "}") && can(jsondecode(var.lambda_authorizer_openapi_security_scheme)))
     error_message = "The input variable `lambda_authorizer_openapi_security_scheme` must be a valid JSON object."
+  }
+
+  validation {
+    condition     = !var.lambda_authorizer_enabled || var.lambda_authorizer_openapi_security_scheme != ""
+    error_message = "The input variable `lambda_authorizer_openapi_security_scheme` must be set when `lambda_authorizer_enabled` is true."
   }
 }
 
@@ -168,9 +181,13 @@ variable "apigateway_request_templates" {
   type        = string
   default     = ""
   description = <<-EOT
-    String to append to the API Gateway integration request templates value.
+    String appended to the API Gateway integration request template, after the
+    URL-encoded message body. Use it to add further form parameters.
     If using a FIFO queue, this variable must contain a value similar to the following:
-    `&MessageDeduplicationId=$context.requestId&MessageGroupId=$input.json('$.Example'))`
+    `&MessageDeduplicationId=$context.requestId&MessageGroupId=$input.json('$.Example')`
+
+    Note that the message body itself is URL-encoded by the module and must not
+    be added here.
   EOT
 }
 
@@ -209,14 +226,30 @@ variable "fifo_queue" {
   default     = false
 }
 
-variable "ddl_queue_name" {
+variable "dlq_queue_name" {
   type        = string
-  description = "Name for the dead-letter queue"
+  description = "Name for the dead-letter queue. Defaults to `<queue_name>-dlq`."
   default     = null
 }
 
-variable "ddl_max_receive_count" {
+variable "dlq_max_receive_count" {
   type        = number
   description = "Number of times a consumer can receive a message from the main queue before it is moved to the dead-letter queue"
   default     = 1
+}
+
+variable "sqs_managed_sse_enabled" {
+  type        = bool
+  description = <<-EOT
+    Whether to enable SQS-managed server-side encryption on both queues.
+    Enabled by default: the module is a webhook sink, so the queue contents are
+    whatever a third party posted.
+  EOT
+  default     = true
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
 }
