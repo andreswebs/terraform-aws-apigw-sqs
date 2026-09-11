@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-%{if api_key_enabled~}
+%{if api_key_param_name != null~}
 API_KEY=$(
   aws ssm get-parameter \
       --name ${api_key_param_name} \
@@ -8,18 +8,21 @@ API_KEY=$(
       --output text | tr -d '[:space:]'
 )
 %{endif~}
+%{if api_url_param_name != null~}
 API_URL=$(
   aws ssm get-parameter \
       --name ${api_url_param_name} \
-      --with-decryption \
       --query 'Parameter.Value' \
       --output text | tr -d '[:space:]'
 )
+%{else~}
+API_URL="${api_url}"
+%{endif~}
 DATA='{ "TestMessage": "${test_message}" }'
 curl \
     --location \
     --header 'Content-Type: application/json' \
-    %{~if api_key_enabled~}
+    %{~if api_key_param_name != null~}
     --header "X-Api-Key: $${API_KEY}" \
     %{~endif~}
     --data-raw $${DATA} \

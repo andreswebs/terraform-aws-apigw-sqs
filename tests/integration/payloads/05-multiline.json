@@ -1,0 +1,5 @@
+{
+  "case": "multiline",
+  "note": "this payload has real newlines between its keys",
+  "escaped": "first line\nsecond line\ttabbed"
+}
