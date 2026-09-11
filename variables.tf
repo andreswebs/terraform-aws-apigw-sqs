@@ -56,6 +56,38 @@ variable "queue_visibility_timeout_seconds" {
   default     = null
 }
 
+variable "queue_message_retention_seconds" {
+  type        = number
+  description = <<-EOT
+    (Optional) How long the queue keeps a message, in seconds, from 60 to
+    1209600 (14 days).
+    When null the AWS default of 4 days applies, which is shorter than a buffer
+    fronting an unreliable consumer usually wants.
+  EOT
+  default     = null
+
+  validation {
+    condition     = var.queue_message_retention_seconds == null || try(var.queue_message_retention_seconds >= 60 && var.queue_message_retention_seconds <= 1209600, false)
+    error_message = "The input variable `queue_message_retention_seconds` must be between 60 and 1209600."
+  }
+}
+
+variable "dlq_message_retention_seconds" {
+  type        = number
+  description = <<-EOT
+    (Optional) How long the dead-letter queue keeps a message, in seconds.
+    Defaults to `queue_message_retention_seconds`: a dead-letter queue that
+    expires sooner than the queue feeding it destroys the evidence it exists to
+    preserve.
+  EOT
+  default     = null
+
+  validation {
+    condition     = var.dlq_message_retention_seconds == null || try(var.dlq_message_retention_seconds >= 60 && var.dlq_message_retention_seconds <= 1209600, false)
+    error_message = "The input variable `dlq_message_retention_seconds` must be between 60 and 1209600."
+  }
+}
+
 variable "log_retention_days" {
   type        = number
   description = "Log retention in days"

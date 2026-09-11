@@ -207,3 +207,60 @@ run "visibility_timeout" {
     error_message = "Visibility timeout should be configurable."
   }
 }
+
+## Retention. SQS defaults to four days, which is shorter than most people
+## assume and is silently wrong for a buffer whose whole purpose is to survive a
+## consumer being down.
+
+run "retention_defaults_to_the_aws_default" {
+  command = apply
+
+  assert {
+    condition     = aws_sqs_queue.this.message_retention_seconds == null
+    error_message = "Unset retention must leave the attribute unset, so existing deployments are unchanged."
+  }
+
+  assert {
+    condition     = aws_sqs_queue.dlq.message_retention_seconds == null
+    error_message = "Unset dead-letter retention must leave the attribute unset."
+  }
+}
+
+run "retention_applies_to_both_queues" {
+  command = apply
+
+  variables {
+    queue_message_retention_seconds = 1209600
+  }
+
+  assert {
+    condition     = aws_sqs_queue.this.message_retention_seconds == 1209600
+    error_message = "The main queue must take the configured retention."
+  }
+
+  ## A dead-letter queue that expires sooner than the queue feeding it destroys
+  ## the evidence it exists to preserve, so it inherits by default.
+  assert {
+    condition     = aws_sqs_queue.dlq.message_retention_seconds == 1209600
+    error_message = "The dead-letter queue must inherit the main queue's retention when not set separately."
+  }
+}
+
+run "dead_letter_retention_can_be_set_independently" {
+  command = apply
+
+  variables {
+    queue_message_retention_seconds = 345600
+    dlq_message_retention_seconds   = 1209600
+  }
+
+  assert {
+    condition     = aws_sqs_queue.this.message_retention_seconds == 345600
+    error_message = "The main queue must keep its own retention."
+  }
+
+  assert {
+    condition     = aws_sqs_queue.dlq.message_retention_seconds == 1209600
+    error_message = "An explicit dead-letter retention must override the inherited value."
+  }
+}
